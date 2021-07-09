@@ -6,16 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
-    <include
-        layout="@layout/bar_layout"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_below="@+id/toolbar">
+        android:padding="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,6 +32,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/btnLogin"
             android:text="log in"
+            android:textColor="@color/white"
             android:background="@color/colorPrimaryDark"
             android:layout_marginTop="10dp"/>
 
