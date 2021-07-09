@@ -3,6 +3,8 @@ package edu.neu.madcourse.sticktothem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -25,8 +27,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.installations.FirebaseInstallations;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import edu.neu.madcourse.sticktothem.Model.StickerReceiverPair;
+import edu.neu.madcourse.sticktothem.Model.StickerReceiverPairAdapter;
 import edu.neu.madcourse.sticktothem.Model.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
     EditText receiver;
     String message;
 
+    // set up for RecyclerView
+    ArrayList<StickerReceiverPair> stickerReceiverPairArrayList = new ArrayList<>();
+    RecyclerView rvStickerSendPair;
+    StickerReceiverPairAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +56,11 @@ public class MainActivity extends AppCompatActivity {
 
         username = findViewById(R.id.username);
 
+        // get current user and database reference
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
+        // get current user's username
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -74,12 +85,23 @@ public class MainActivity extends AppCompatActivity {
         btnSendDialog = findViewById(R.id.btnSendDialog);
         btnHistory = findViewById(R.id.btnHistory);
 
+        // set up button to pop up a dialog to send stickers
         btnSendDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSendStickerDialog();
             }
         });
+
+        // set up RecyclerView
+        rvStickerSendPair = (RecyclerView) findViewById(R.id.rvStickersReceived);
+        // create adapter
+        adapter = new StickerReceiverPairAdapter(stickerReceiverPairArrayList);
+        // attach the adapter to the recyclerView to populate items
+        rvStickerSendPair.setAdapter(adapter);
+        // set layout manager to position the items
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        rvStickerSendPair.setLayoutManager(layoutManager);
     }
 
     private void showSendStickerDialog() {
@@ -96,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
 
         alertDialog.show();
 
-
         // find receiver's userid
         Intent intent = getIntent();
         String userid = intent.getStringExtra("userid");
@@ -109,10 +130,10 @@ public class MainActivity extends AppCompatActivity {
         Button btnSad = findViewById(R.id.btnSad);
         Button btnLaugh = findViewById(R.id.btnLaugh);
 
-        btnCry.setOnClickListener(stickerButtonListener);
-        btnSmile.setOnClickListener(stickerButtonListener);
-        btnLaugh.setOnClickListener(stickerButtonListener);
-        btnSad.setOnClickListener(stickerButtonListener);
+        btnCry.setOnClickListener(stickerButtonClickListener);
+        btnSmile.setOnClickListener(stickerButtonClickListener);
+        btnLaugh.setOnClickListener(stickerButtonClickListener);
+        btnSad.setOnClickListener(stickerButtonClickListener);
 
         // set onClickListener for send message button
         Button btnSendMessage = inputView.findViewById(R.id.btnSendMessage);
@@ -130,15 +151,41 @@ public class MainActivity extends AppCompatActivity {
                     // if sticker is not selected
                     Toast.makeText(MainActivity.this, "Please select one sticker.", Toast.LENGTH_SHORT).show();
                 } else {
-                    sendSticker(firebaseUser.getUid(),userid, message);
+                    // check if receiver exists
+                    databaseReference.child("users").child(txtReceiver)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.getValue() != null) {
+                                        // create a new StickerSenderPair
+                                        StickerReceiverPair stickerReceiverPair = new StickerReceiverPair(message, txtReceiver);
+                                        // add newly created StickerSenderPair to list
+                                        int listCount = adapter.getItemCount();
+                                        stickerReceiverPairArrayList.add(listCount, stickerReceiverPair);
+                                        adapter.notifyItemInserted(listCount);
 
-                    // pop message showing sticker sent successfully
-                    Toast.makeText(MainActivity.this, "Sticker sent successfully.", Toast.LENGTH_LONG).show();
+                                        user.numOfStickersSent++;
+                                        sendSticker(firebaseUser.getUid(), stickerReceiverPair);
+                                        // close dialog
+                                        alertDialog.dismiss();
+                                        // pop message showing sticker sent successfully
+                                        Toast.makeText(MainActivity.this, "Sticker sent successfully.", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        // pop message showing receiver does not exist
+                                        Toast.makeText(MainActivity.this, "Username does not exist.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                 }
             }
         });
 
-        Button btnCancel = inputView.findViewById(R.id.btnCancel);
+        Button btnCancel = inputView.findViewById(R.id.btnClose);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,36 +195,92 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void sendSticker(String sender, String receiver, String message) {
+    private void showStickerHistoryDialog() {
+        // create an AlertDialog builder
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+
+        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+        final View inputView = layoutInflater.inflate(R.layout.sticker_history_layout, null);
+
+        alertDialogBuilder.setView(inputView);
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        alertDialog.show();
+
+        // find current user and database reference
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        readReceiveStickerHistory(firebaseUser.getUid());
+
+        Button btnClose = inputView.findViewById(R.id.btnClose);
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+            }
+        });
+
+    }
+
+    private void sendSticker(String sender, StickerReceiverPair stickerReceiverPair) {
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         HashMap<String, Object> hashMap  = new HashMap<>();
         hashMap.put("sender", sender);
-        hashMap.put("receiver", receiver);
-        hashMap.put("message", message);
+        hashMap.put("stickerSenderPair", stickerReceiverPair);
 
         databaseReference.child("chats").push().setValue(hashMap);
     }
 
-    private View.OnClickListener stickerButtonListener = new View.OnClickListener() {
+    private View.OnClickListener stickerButtonClickListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btnSmile:
-                    message = "\uD83D\uDE42";
+                    message = "🙂";
                     break;
                 case R.id.btnCry:
-                    message = "\uD83D\uDE2D";
+                    message = "😭";
                     break;
                 case R.id.btnSad:
-                    message = "\uD83D\uDE41";
+                    message = "🙁";
                     break;
                 case R.id.btnLaugh:
-                    message = "\uD83D\uDE00";
+                    message = "😀";
                     break;
             }
         }
     };
+
+    private void readReceiveStickerHistory(String userid) {
+        stickerReceiverPairArrayList = new ArrayList<>();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("chats");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                stickerReceiverPairArrayList.clear();
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                    StickerReceiverPair stickerReceiverPair = dataSnapshot.getValue(StickerReceiverPair.class);
+                    if (stickerReceiverPair.getReceiver().equals(userid)) {
+                        stickerReceiverPairArrayList.add(stickerReceiverPair);
+                    }
+                }
+                adapter = new StickerReceiverPairAdapter(stickerReceiverPairArrayList);
+                rvStickerSendPair.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
 
 }
