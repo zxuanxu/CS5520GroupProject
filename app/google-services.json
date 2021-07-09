@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "135336181436",
+    "project_id": "cs5520-firebaseproject",
+    "storage_bucket": "cs5520-firebaseproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:135336181436:android:b68368269eed7178949ab9",
+        "android_client_info": {
+          "package_name": "edu.neu.madcourse.sticktothem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "135336181436-9bvu3epkp7u6qf645hkh0imjc39t2nvl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwExkAJbrVVWKiQBk0GcrpjLBF8BvuHa8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "135336181436-9bvu3epkp7u6qf645hkh0imjc39t2nvl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
