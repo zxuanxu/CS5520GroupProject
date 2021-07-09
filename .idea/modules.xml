@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/CS5520GroupProject.iml" filepath="$PROJECT_DIR$/.idea/CS5520GroupProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/StickToThem.iml" filepath="$PROJECT_DIR$/.idea/modules/StickToThem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/StickToThem.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/StickToThem.app.iml" />
     </modules>
   </component>
 </project>
