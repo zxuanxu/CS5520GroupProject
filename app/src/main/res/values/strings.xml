@@ -2,4 +2,8 @@
     <string name="app_name">StickToThem</string>
     <string name="login_name">Log in</string>
     <string name="register_name">Register</string>
+    <string name="smile">🙂</string>
+    <string name="cry">😭</string>
+    <string name="sad">🙁</string>
+    <string name="laugh">😀</string>
 </resources>
