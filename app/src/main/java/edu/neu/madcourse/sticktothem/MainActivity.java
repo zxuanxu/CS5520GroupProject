@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +24,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.installations.FirebaseInstallations;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     // set up for RecyclerView
     ArrayList<StickerReceiverPair> stickerReceiverPairArrayList = new ArrayList<>();
-    RecyclerView rvStickerSendPair;
+    RecyclerView rvStickerReceiverPair;
     StickerReceiverPairAdapter adapter;
 
     @Override
@@ -74,14 +72,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        FirebaseInstallations.getInstance().getId().addOnSuccessListener(new OnSuccessListener<String>() {
-            @Override
-            public void onSuccess(String s) {
-
-            }
-        });
-
         btnSendDialog = findViewById(R.id.btnSendDialog);
         btnHistory = findViewById(R.id.btnHistory);
 
@@ -94,14 +84,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // set up RecyclerView
-        rvStickerSendPair = (RecyclerView) findViewById(R.id.rvStickersReceived);
-        // create adapter
-        adapter = new StickerReceiverPairAdapter(stickerReceiverPairArrayList);
-        // attach the adapter to the recyclerView to populate items
-        rvStickerSendPair.setAdapter(adapter);
-        // set layout manager to position the items
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        rvStickerSendPair.setLayoutManager(layoutManager);
+        rvStickerReceiverPair = (RecyclerView) findViewById(R.id.rvStickersReceived);
     }
 
     private void showSendStickerDialog() {
@@ -271,7 +254,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 adapter = new StickerReceiverPairAdapter(stickerReceiverPairArrayList);
-                rvStickerSendPair.setAdapter(adapter);
+                rvStickerReceiverPair.setAdapter(adapter);
+                // set layout manager to position the items
+                LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+                rvStickerReceiverPair.setLayoutManager(layoutManager);
             }
 
             @Override
