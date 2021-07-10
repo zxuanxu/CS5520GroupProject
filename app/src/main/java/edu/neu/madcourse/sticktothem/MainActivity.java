@@ -285,8 +285,8 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseDatabase.getInstance()
                 .getReference("Users")
-                .orderByChild("id")
-                .equalTo(userid)
+                .child(userid)
+                .child("chats")
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
