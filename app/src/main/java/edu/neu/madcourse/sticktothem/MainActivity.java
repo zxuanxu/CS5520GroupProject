@@ -120,6 +120,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // set up button to pop up a dialog for sticker history
+        btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showStickerHistory();
+            }
+        });
+
         // set up RecyclerView
         rvStickerReceiverPair = (RecyclerView) findViewById(R.id.rvStickersReceived);
     }
