@@ -207,6 +207,7 @@ public class StickerDialog extends AppCompatDialogFragment {
         HashMap<String, Object> hashMap  = new HashMap<>();
         hashMap.put("sender", stickerSenderPair.getSender());
         hashMap.put("sticker", stickerSenderPair.getSticker());
+        hashMap.put("stickerSenderPair", stickerSenderPair);
 
         databaseReference.child("chats").push().setValue(hashMap);
         sendStickerToDevice(receiver,

@@ -283,16 +283,17 @@ public class MainActivity extends AppCompatActivity {
     private void readReceiveStickerHistory(String userid) {
         stickerSenderPairArrayList = new ArrayList<>();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance()
+                .getReference("Users")
+                .orderByChild("id")
+                .equalTo(userid)
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 stickerSenderPairArrayList.clear();
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                     StickerSenderPair stickerSenderPair = dataSnapshot.getValue(StickerSenderPair.class);
-                    if (stickerSenderPair.getSender().equals(userid)) {
-                        stickerSenderPairArrayList.add(stickerSenderPair);
-                    }
+                    stickerSenderPairArrayList.add(stickerSenderPair);
                 }
                 // create adapter based on current StickerReceiverPairArrayList
                 adapter = new StickerSenderPairAdapter(stickerSenderPairArrayList);
