@@ -53,7 +53,7 @@ public class StickerSenderPairAdapter extends RecyclerView.Adapter<StickerSender
 
         // Set item views based on views and data model
         holder.sticker.setText(stickerSenderPair.getSticker());
-        holder.sender.setText(stickerSenderPair.getSender());
+        holder.sender.setText(" from " + stickerSenderPair.getSender());
     }
 
     @Override

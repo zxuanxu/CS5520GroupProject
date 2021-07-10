@@ -55,4 +55,10 @@
         android:id="@+id/btnHistory"
         android:text="Chat history"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvStickersReceived"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"/>
+
 </LinearLayout>

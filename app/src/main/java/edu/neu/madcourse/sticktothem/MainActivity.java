@@ -30,10 +30,12 @@ import edu.neu.madcourse.sticktothem.Model.StickerSenderPairAdapter;
 import edu.neu.madcourse.sticktothem.Model.User;
 
 public class MainActivity extends AppCompatActivity {
+    // set up for Firebase
     FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
     User user;
 
+    // set up for two dialogs
     Button btnSendDialog, btnHistory;
     TextView username;
     EditText receiver;
@@ -55,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
 
         username = findViewById(R.id.username);
         tvNumOfStickerSent = findViewById(R.id.tvNumOfStickerSent);
+
+        // set up RecyclerView
+        rvStickerReceiverPair = (RecyclerView) findViewById(R.id.rvStickersReceived);
+        adapter = new StickerSenderPairAdapter(stickerSenderPairArrayList);
+        rvStickerReceiverPair.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        rvStickerReceiverPair.setLayoutManager(layoutManager);
 
         // get current user and database reference
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -128,8 +137,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // set up RecyclerView
-        rvStickerReceiverPair = (RecyclerView) findViewById(R.id.rvStickersReceived);
     }
 
     private void showSendStickerDialog() {
@@ -221,17 +228,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void showStickerHistory() {
         // create an AlertDialog builder
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-
-        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-        final View inputView = layoutInflater.inflate(R.layout.sticker_history_layout, null);
-
-        alertDialogBuilder.setView(inputView);
-
-        final AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        alertDialog.show();
+//        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+//
+//        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
+//        final View inputView = layoutInflater.inflate(R.layout.sticker_history_layout, null);
+//
+//        alertDialogBuilder.setView(inputView);
+//
+//        final AlertDialog alertDialog = alertDialogBuilder.create();
+//        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+//
+//        alertDialog.show();
 
         // find current user and database reference
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -239,13 +246,13 @@ public class MainActivity extends AppCompatActivity {
 
         readReceiveStickerHistory(firebaseUser.getUid());
 
-        Button btnClose = inputView.findViewById(R.id.btnClose);
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.cancel();
-            }
-        });
+//        Button btnClose = inputView.findViewById(R.id.btnClose);
+//        btnClose.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                alertDialog.cancel();
+//            }
+//        });
 
     }
 
@@ -281,7 +288,6 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void readReceiveStickerHistory(String userid) {
-        stickerSenderPairArrayList = new ArrayList<>();
 
         FirebaseDatabase.getInstance()
                 .getReference("Users")
@@ -295,12 +301,8 @@ public class MainActivity extends AppCompatActivity {
                     StickerSenderPair stickerSenderPair = dataSnapshot.getValue(StickerSenderPair.class);
                     stickerSenderPairArrayList.add(stickerSenderPair);
                 }
-                // create adapter based on current StickerReceiverPairArrayList
-                adapter = new StickerSenderPairAdapter(stickerSenderPairArrayList);
-                rvStickerReceiverPair.setAdapter(adapter);
-                // set layout manager to position the items
-                LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-                rvStickerReceiverPair.setLayoutManager(layoutManager);
+                // update adapter
+                adapter.notifyDataSetChanged();
             }
 
             @Override
