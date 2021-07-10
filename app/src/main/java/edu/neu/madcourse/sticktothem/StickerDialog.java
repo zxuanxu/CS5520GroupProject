@@ -200,10 +200,10 @@ public class StickerDialog extends AppCompatDialogFragment {
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(receiver);
 
         HashMap<String, Object> hashMap  = new HashMap<>();
-        hashMap.put("sticker", stickerReceiverPair.getSticker());
-        hashMap.put("sender", stickerReceiverPair.getReceiver());
+        hashMap.put("sender",user);
+        hashMap.put("stickerReceiverPair", stickerReceiverPair);
 
-        databaseReference.child("stickerReceiverPairArrayList").push().setValue(hashMap);
+        databaseReference.child("chats").push().setValue(hashMap);
         sendStickerToDevice(receiver,
                 stickerReceiverPair.getSticker() + " from " + stickerReceiverPair.getReceiver());
     }
