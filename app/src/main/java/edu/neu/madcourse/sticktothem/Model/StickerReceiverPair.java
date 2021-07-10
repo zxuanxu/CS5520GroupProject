@@ -2,19 +2,19 @@ package edu.neu.madcourse.sticktothem.Model;
 
 public class StickerReceiverPair {
     private String sticker;
-    private String sender;
+    private String receiver;
 
-    public StickerReceiverPair(String sticker, String sender) {
+    public StickerReceiverPair(String sticker, String receiver) {
         this.sticker = sticker;
-        this.sender = sender;
+        this.receiver = receiver;
     }
 
     public String getSticker() {
         return this.sticker;
     }
 
-    public String getSender() {
-        return this.sender;
+    public String getReceiver() {
+        return this.receiver;
     }
 
 }

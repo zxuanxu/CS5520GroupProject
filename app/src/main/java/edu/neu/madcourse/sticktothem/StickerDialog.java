@@ -1,7 +1,6 @@
 package edu.neu.madcourse.sticktothem;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,14 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,7 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
@@ -42,7 +33,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 import edu.neu.madcourse.sticktothem.Model.StickerReceiverPair;
@@ -195,11 +185,11 @@ public class StickerDialog extends AppCompatDialogFragment {
 
         HashMap<String, Object> hashMap  = new HashMap<>();
         hashMap.put("sticker", stickerReceiverPair.getSticker());
-        hashMap.put("sender", stickerReceiverPair.getSender());
+        hashMap.put("sender", stickerReceiverPair.getReceiver());
 
         databaseReference.child("stickerReceiverPairArrayList").push().setValue(hashMap);
         sendStickerToDevice(receiver,
-                stickerReceiverPair.getSticker() + " from " + stickerReceiverPair.getSender());
+                stickerReceiverPair.getSticker() + " from " + stickerReceiverPair.getReceiver());
     }
 
 //    private void getToken(String message, String userId) {

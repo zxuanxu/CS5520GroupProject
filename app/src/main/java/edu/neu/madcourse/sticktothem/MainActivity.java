@@ -282,10 +282,11 @@ public class MainActivity extends AppCompatActivity {
                 stickerReceiverPairArrayList.clear();
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                     StickerReceiverPair stickerReceiverPair = dataSnapshot.getValue(StickerReceiverPair.class);
-                    if (stickerReceiverPair.getSender().equals(userid)) {
+                    if (stickerReceiverPair.getReceiver().equals(userid)) {
                         stickerReceiverPairArrayList.add(stickerReceiverPair);
                     }
                 }
+                // create adapter based on current StickerReceiverPairArrayList
                 adapter = new StickerReceiverPairAdapter(stickerReceiverPairArrayList);
                 rvStickerReceiverPair.setAdapter(adapter);
                 // set layout manager to position the items
