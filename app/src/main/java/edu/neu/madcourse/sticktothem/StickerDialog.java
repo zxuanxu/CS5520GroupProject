@@ -142,7 +142,7 @@ public class StickerDialog extends AppCompatDialogFragment {
                                         databaseReference.child(user.getUsername())
                                                 .child("numOfStickersSent").setValue(user.numOfStickersSent);
                                         sendSticker(txtReceiver, stickerReceiverPair);
-                                        getToken(message, txtReceiver);
+//                                        getToken(message, txtReceiver);
 
 //                                        sendStickerToDevice(txtReceiver, message + " from " + user.getUsername());
 
@@ -202,67 +202,67 @@ public class StickerDialog extends AppCompatDialogFragment {
                 stickerReceiverPair.getSticker() + " from " + stickerReceiverPair.getSender());
     }
 
-    private void getToken(String message, String userId) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String token = snapshot.child("token").getValue().toString();
-                String name = snapshot.child("username").getValue().toString();
-
-                // FCM use json format to send data message
-                JSONObject to = new JSONObject();
-                JSONObject data = new JSONObject();
-                try {
-                    data.put("title", name);
-                    data.put("message", message);
-                    data.put("userId", userId);
-
-                    to.put("to", token);
-                    to.put("data", data);
-
-                    sendNotification(to);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    private void sendNotification(JSONObject to) {
-        // url to send POST request
-        String notificationUrl = "http://fcm.googleapis.com/fcm/send";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, notificationUrl, to, response -> {
-            Log.d("notification", "sendNotification: " + response);
-        }, error -> {
-            Log.d("notification", "sendNotification: " + error);
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                // add project server key and application type
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("Authorization", "key=" + MainActivity.SERVER_KEY);
-                hashMap.put("Content-Type", "application/json");
-                return hashMap;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json";
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
-        request.setRetryPolicy(new DefaultRetryPolicy(30000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(request);
-    }
+//    private void getToken(String message, String userId) {
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                String token = snapshot.child("token").getValue().toString();
+//                String name = snapshot.child("username").getValue().toString();
+//
+//                // FCM use json format to send data message
+//                JSONObject to = new JSONObject();
+//                JSONObject data = new JSONObject();
+//                try {
+//                    data.put("title", name);
+//                    data.put("message", message);
+//                    data.put("userId", userId);
+//
+//                    to.put("to", token);
+//                    to.put("data", data);
+//
+//                    sendNotification(to);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
+//
+//    private void sendNotification(JSONObject to) {
+//        // url to send POST request
+//        String notificationUrl = "http://fcm.googleapis.com/fcm/send";
+//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, notificationUrl, to, response -> {
+//            Log.d("notification", "sendNotification: " + response);
+//        }, error -> {
+//            Log.d("notification", "sendNotification: " + error);
+//        }) {
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                // add project server key and application type
+//                HashMap<String, String> hashMap = new HashMap<>();
+//                hashMap.put("Authorization", "key=" + MainActivity.SERVER_KEY);
+//                hashMap.put("Content-Type", "application/json");
+//                return hashMap;
+//            }
+//
+//            @Override
+//            public String getBodyContentType() {
+//                return "application/json";
+//            }
+//        };
+//
+//        RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
+//        request.setRetryPolicy(new DefaultRetryPolicy(30000,
+//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//        requestQueue.add(request);
+//    }
 
     private void sendStickerToDevice(final String deviceToSendTo, final String stickerAndUserFrom) {
         new Thread(new Runnable() {
