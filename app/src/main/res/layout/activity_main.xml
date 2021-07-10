@@ -13,19 +13,36 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/username"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="8dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
         android:layout_marginTop="10dp"/>
 
     <TextView
+        android:id="@+id/tvNumOfStickerSent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="8dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginBottom="5dp"
+        android:text="You have sent out: "
         android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Send a sticker to your friends!"/>
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/white"
         android:id="@+id/btnSendDialog"
         android:text="Send a sticker"/>
 
@@ -33,6 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/white"
         android:id="@+id/btnHistory"
         android:text="Chat history"/>
 

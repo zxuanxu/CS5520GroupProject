@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     TextView username;
     EditText receiver;
     String message;
+    int numOfStickerSent;
+    TextView tvNumOfStickerSent;
 
     // set up for RecyclerView
     ArrayList<StickerReceiverPair> stickerReceiverPairArrayList = new ArrayList<>();
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         username = findViewById(R.id.username);
+        tvNumOfStickerSent = findViewById(R.id.tvNumOfStickerSent);
 
         // get current user and database reference
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -71,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
                     for (DataSnapshot child : snapshot.getChildren()) {
                         user = child.getValue(User.class);
                         username.setText(user.getUsername());
+
+                        // get number of sticker sent
+                        numOfStickerSent = user.getNumOfStickersSent();
+                        tvNumOfStickerSent.setText(tvNumOfStickerSent.getText().toString() + numOfStickerSent + " stickers");
+
                     }
                 } catch(Exception e) {
                     Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
@@ -206,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showStickerHistoryDialog() {
+    private void showStickerHistory() {
         // create an AlertDialog builder
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
@@ -222,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
 
         // find current user and database reference
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").getParent();
 
         readReceiveStickerHistory(firebaseUser.getUid());
 
@@ -236,15 +244,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void sendSticker(String sender, StickerReceiverPair stickerReceiverPair) {
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-
-        HashMap<String, Object> hashMap  = new HashMap<>();
-        hashMap.put("sender", sender);
-        hashMap.put("stickerSenderPair", stickerReceiverPair);
-
-        databaseReference.child("chats").push().setValue(hashMap);
-    }
+//    private void sendSticker(String sender, StickerReceiverPair stickerReceiverPair) {
+//        databaseReference = FirebaseDatabase.getInstance().getReference();
+//
+//        HashMap<String, Object> hashMap  = new HashMap<>();
+//        hashMap.put("sender", sender);
+//        hashMap.put("stickerSenderPair", stickerReceiverPair);
+//
+//        databaseReference.child("chats").push().setValue(hashMap);
+//    }
 
     private View.OnClickListener stickerButtonClickListener = new View.OnClickListener() {
 
@@ -270,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
     private void readReceiveStickerHistory(String userid) {
         stickerReceiverPairArrayList = new ArrayList<>();
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("chats");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
