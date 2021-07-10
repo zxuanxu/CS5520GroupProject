@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     for (DataSnapshot child : snapshot.getChildren()) {
                         user = child.getValue(User.class);
+                        StickerDialog.user = user;
                         username.setText(user.getUsername());
 
                         // get number of sticker sent

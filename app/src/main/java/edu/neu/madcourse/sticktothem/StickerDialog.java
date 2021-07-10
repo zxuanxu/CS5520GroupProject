@@ -43,7 +43,7 @@ public class StickerDialog extends AppCompatDialogFragment {
 
     FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
-    User user;
+    static User user;
 
     TextView username;
     EditText receiver;
@@ -113,15 +113,15 @@ public class StickerDialog extends AppCompatDialogFragment {
                     Toast.makeText(context, "Please select one sticker.", Toast.LENGTH_SHORT).show();
                 } else {
                     // check if receiver exists
-                    databaseReference.child(txtReceiver)
+                    databaseReference
+                            .child(txtReceiver)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.getValue() != null) {
+                                    if (snapshot.exists()) {
                                         // create a new StickerSenderPair
                                         StickerReceiverPair stickerReceiverPair = new StickerReceiverPair(
-                                                message,
-                                                user.getUsername()
+                                                message, user.getUsername()
                                         );
                                         // add newly created StickerSenderPair to list
 //                                        int listCount = adapter.getItemCount();
