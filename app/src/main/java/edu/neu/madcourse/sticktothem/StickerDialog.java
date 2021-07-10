@@ -74,9 +74,14 @@ public class StickerDialog extends AppCompatDialogFragment {
 
         builder.setView(view);
 
-        // set user
+        // set user to current user
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("Users").addValueEventListener(new ValueEventListener() {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReference
+                .child("Users")
+                .orderByChild("id")
+                .equalTo(firebaseUser.getUid())
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
