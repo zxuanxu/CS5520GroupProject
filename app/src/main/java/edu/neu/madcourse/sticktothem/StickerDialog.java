@@ -43,7 +43,7 @@ public class StickerDialog extends AppCompatDialogFragment {
 
     FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
-    static User user;
+    User user;
 
     TextView username;
     EditText receiver;
@@ -73,6 +73,22 @@ public class StickerDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.input_dialog_layout, null);
 
         builder.setView(view);
+
+        // set user
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Users").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                    user = dataSnapshot.getValue(User.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         // set onClickListener for four sticker buttons
         Button btnSmile = view.findViewById(R.id.btnSmile);
