@@ -6,10 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import edu.neu.madcourse.sticktothem.Model.StickerReceiverPair;
 import edu.neu.madcourse.sticktothem.Model.StickerReceiverPairAdapter;
@@ -304,5 +301,67 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+//    private void getToken(String message, String userId) {
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                String token = snapshot.child("token").getValue().toString();
+//                String name = snapshot.child("username").getValue().toString();
+//
+//                // FCM use json format to send data message
+//                JSONObject to = new JSONObject();
+//                JSONObject data = new JSONObject();
+//                try {
+//                    data.put("title", name);
+//                    data.put("message", message);
+//                    data.put("userId", userId);
+//
+//                    to.put("to", token);
+//                    to.put("data", data);
+//
+//                    sendNotification(to);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
+//
+//    private void sendNotification(JSONObject to) {
+//        // url to send POST request
+//        String notificationUrl = "http://fcm.googleapis.com/fcm/send";
+//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, notificationUrl, to, response -> {
+//            Log.d("notification", "sendNotification: " + response);
+//        }, error -> {
+//            Log.d("notification", "sendNotification: " + error);
+//        }) {
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                // add project server key and application type
+//                HashMap<String, String> hashMap = new HashMap<>();
+//                hashMap.put("Authorization", "key=" + SERVER_KEY);
+//                hashMap.put("Content-Type", "application/json");
+//                return hashMap;
+//            }
+//
+//            @Override
+//            public String getBodyContentType() {
+//                return "application/json";
+//            }
+//        };
+//
+//        RequestQueue requestQueue = Volley.newRequestQueue(this);
+//        request.setRetryPolicy(new DefaultRetryPolicy(30000,
+//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//        requestQueue.add(request);
+//    }
 
 }
