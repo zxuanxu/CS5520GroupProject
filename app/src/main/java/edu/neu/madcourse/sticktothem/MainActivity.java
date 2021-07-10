@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseDatabase.getInstance()
                 .getReference("Users")
-                .child(userid)
+                .child(user.getUsername())
                 .child("chats")
                 .addValueEventListener(new ValueEventListener() {
             @Override
