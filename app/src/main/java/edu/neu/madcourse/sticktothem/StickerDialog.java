@@ -105,7 +105,7 @@ public class StickerDialog extends AppCompatDialogFragment {
                 receiver = view.findViewById(R.id.receiver);
                 String txtReceiver = receiver.getText().toString();
                 firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                databaseReference = FirebaseDatabase.getInstance().getReference();
+                databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
 
                 if (TextUtils.isEmpty(txtReceiver)) {
@@ -116,22 +116,27 @@ public class StickerDialog extends AppCompatDialogFragment {
                     Toast.makeText(context, "Please select one sticker.", Toast.LENGTH_SHORT).show();
                 } else {
                     // check if receiver exists
-                    databaseReference.child("users").child(txtReceiver)
+                    databaseReference.child(txtReceiver)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.getValue() != null) {
                                         // create a new StickerSenderPair
-                                        StickerReceiverPair stickerReceiverPair = new StickerReceiverPair(message, txtReceiver);
+                                        StickerReceiverPair stickerReceiverPair = new StickerReceiverPair(
+                                                message,
+                                                user.getUsername()
+                                        );
                                         // add newly created StickerSenderPair to list
-                                        int listCount = adapter.getItemCount();
-                                        stickerReceiverPairArrayList.add(listCount, stickerReceiverPair);
-                                        adapter.notifyItemInserted(listCount);
+//                                        int listCount = adapter.getItemCount();
+//                                        stickerReceiverPairArrayList.add(listCount, stickerReceiverPair);
+//                                        adapter.notifyItemInserted(listCount);
 
                                         user.numOfStickersSent++;
-//                                        sendSticker(firebaseUser.getUid(), stickerReceiverPair);
+                                        databaseReference.child(user.getUsername())
+                                                .child("numOfStickersSent").setValue(user.numOfStickersSent);
+                                        sendSticker(txtReceiver, stickerReceiverPair);
 
-                                        sendStickerToDevice(txtReceiver, message + " from " + user.getUsername());
+//                                        sendStickerToDevice(txtReceiver, message + " from " + user.getUsername());
 
                                         // close dialog
                                         dismiss();
@@ -174,18 +179,19 @@ public class StickerDialog extends AppCompatDialogFragment {
                     message = "😀";
                     break;
             }
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
         }
     };
 
-    private void sendSticker(String sender, StickerReceiverPair stickerReceiverPair) {
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+    private void sendSticker(String receiver, StickerReceiverPair stickerReceiverPair) {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(receiver);
 
         HashMap<String, Object> hashMap  = new HashMap<>();
-        hashMap.put("sender", sender);
-        hashMap.put("stickerSenderPair", stickerReceiverPair);
+        hashMap.put("sticker", stickerReceiverPair.getSticker());
+        hashMap.put("sender", stickerReceiverPair.getSender());
 
-        databaseReference.child("chats").push().setValue(hashMap);
+        databaseReference.child("stickerReceiverPairArrayList").push().setValue(hashMap);
+        sendStickerToDevice(receiver,
+                stickerReceiverPair.getSticker() + " from " + stickerReceiverPair.getSender());
     }
 
     private void sendStickerToDevice(final String deviceToSendTo, final String stickerAndUserFrom) {

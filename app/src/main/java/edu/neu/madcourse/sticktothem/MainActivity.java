@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
                 stickerReceiverPairArrayList.clear();
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                     StickerReceiverPair stickerReceiverPair = dataSnapshot.getValue(StickerReceiverPair.class);
-                    if (stickerReceiverPair.getReceiver().equals(userid)) {
+                    if (stickerReceiverPair.getSender().equals(userid)) {
                         stickerReceiverPairArrayList.add(stickerReceiverPair);
                     }
                 }
