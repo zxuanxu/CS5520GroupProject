@@ -25,8 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import edu.neu.madcourse.sticktothem.Model.StickerReceiverPair;
-import edu.neu.madcourse.sticktothem.Model.StickerReceiverPairAdapter;
+import edu.neu.madcourse.sticktothem.Model.StickerSenderPair;
+import edu.neu.madcourse.sticktothem.Model.StickerSenderPairAdapter;
 import edu.neu.madcourse.sticktothem.Model.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
     TextView tvNumOfStickerSent;
 
     // set up for RecyclerView
-    ArrayList<StickerReceiverPair> stickerReceiverPairArrayList = new ArrayList<>();
+    ArrayList<StickerSenderPair> stickerSenderPairArrayList = new ArrayList<>();
     RecyclerView rvStickerReceiverPair;
-    StickerReceiverPairAdapter adapter;
+    StickerSenderPairAdapter adapter;
 
     public static final String SERVER_KEY = "key=AAAAH4KqPrw:APA91bE_nXgwLZvPG7s_H0OSALdP-EWb_sNE-CVmBHTUuoQLiouwCUoNMOhKo32GEAGKQneB7tOeydBVSPs1QWWf2P6OjNJqu61o77V3ZGXjKVohay1GYs09vaCSpZ3VtQwmC3TuTWzg";
 
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         StickerDialog stickerDialog = new StickerDialog(
                 this,
                 adapter,
-                stickerReceiverPairArrayList,
+                stickerSenderPairArrayList,
                 user);
 
         stickerDialog.show(getSupportFragmentManager(), "sticker dialog");
@@ -281,21 +281,21 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void readReceiveStickerHistory(String userid) {
-        stickerReceiverPairArrayList = new ArrayList<>();
+        stickerSenderPairArrayList = new ArrayList<>();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                stickerReceiverPairArrayList.clear();
+                stickerSenderPairArrayList.clear();
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                    StickerReceiverPair stickerReceiverPair = dataSnapshot.getValue(StickerReceiverPair.class);
-                    if (stickerReceiverPair.getReceiver().equals(userid)) {
-                        stickerReceiverPairArrayList.add(stickerReceiverPair);
+                    StickerSenderPair stickerSenderPair = dataSnapshot.getValue(StickerSenderPair.class);
+                    if (stickerSenderPair.getSender().equals(userid)) {
+                        stickerSenderPairArrayList.add(stickerSenderPair);
                     }
                 }
                 // create adapter based on current StickerReceiverPairArrayList
-                adapter = new StickerReceiverPairAdapter(stickerReceiverPairArrayList);
+                adapter = new StickerSenderPairAdapter(stickerSenderPairArrayList);
                 rvStickerReceiverPair.setAdapter(adapter);
                 // set layout manager to position the items
                 LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);

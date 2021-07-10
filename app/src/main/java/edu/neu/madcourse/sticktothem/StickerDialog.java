@@ -35,8 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import edu.neu.madcourse.sticktothem.Model.StickerReceiverPair;
-import edu.neu.madcourse.sticktothem.Model.StickerReceiverPairAdapter;
+import edu.neu.madcourse.sticktothem.Model.StickerSenderPair;
+import edu.neu.madcourse.sticktothem.Model.StickerSenderPairAdapter;
 import edu.neu.madcourse.sticktothem.Model.User;
 
 public class StickerDialog extends AppCompatDialogFragment {
@@ -51,18 +51,18 @@ public class StickerDialog extends AppCompatDialogFragment {
 
     Context context;
 
-    StickerReceiverPairAdapter adapter;
-    ArrayList<StickerReceiverPair> stickerReceiverPairArrayList;
+    StickerSenderPairAdapter adapter;
+    ArrayList<StickerSenderPair> stickerSenderPairArrayList;
 
     public StickerDialog(
             Context context,
-            StickerReceiverPairAdapter adapter,
-            ArrayList<StickerReceiverPair> stickerReceiverPairArrayList,
+            StickerSenderPairAdapter adapter,
+            ArrayList<StickerSenderPair> stickerSenderPairArrayList,
             User user
     ) {
         this.context = context;
         this.adapter = adapter;
-        this.stickerReceiverPairArrayList = stickerReceiverPairArrayList;
+        this.stickerSenderPairArrayList = stickerSenderPairArrayList;
         this.user = user;
     }
 
@@ -141,7 +141,7 @@ public class StickerDialog extends AppCompatDialogFragment {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()) {
                                         // create a new StickerSenderPair
-                                        StickerReceiverPair stickerReceiverPair = new StickerReceiverPair(
+                                        StickerSenderPair stickerSenderPair = new StickerSenderPair(
                                                 message, user.getUsername()
                                         );
                                         // add newly created StickerSenderPair to list
@@ -152,7 +152,7 @@ public class StickerDialog extends AppCompatDialogFragment {
                                         user.numOfStickersSent++;
                                         databaseReference.child(user.getUsername())
                                                 .child("numOfStickersSent").setValue(user.numOfStickersSent);
-                                        sendSticker(txtReceiver, stickerReceiverPair);
+                                        sendSticker(txtReceiver, stickerSenderPair);
 //                                        getToken(message, txtReceiver);
 
 //                                        sendStickerToDevice(txtReceiver, message + " from " + user.getUsername());
@@ -201,16 +201,16 @@ public class StickerDialog extends AppCompatDialogFragment {
         }
     };
 
-    private void sendSticker(String receiver, StickerReceiverPair stickerReceiverPair) {
+    private void sendSticker(String receiver, StickerSenderPair stickerSenderPair) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(receiver);
 
         HashMap<String, Object> hashMap  = new HashMap<>();
-        hashMap.put("sender",user);
-        hashMap.put("stickerReceiverPair", stickerReceiverPair);
+        hashMap.put("sender", stickerSenderPair.getSender());
+        hashMap.put("sticker", stickerSenderPair.getSticker());
 
         databaseReference.child("chats").push().setValue(hashMap);
         sendStickerToDevice(receiver,
-                stickerReceiverPair.getSticker() + " from " + stickerReceiverPair.getReceiver());
+                stickerSenderPair.getSticker() + " from " + stickerSenderPair.getSender());
     }
 
 //    private void getToken(String message, String userId) {

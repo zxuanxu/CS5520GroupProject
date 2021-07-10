@@ -17,15 +17,15 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvStickerReceived"
             android:textSize="16sp"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvStickerReceiver"
+            android:id="@+id/tvStickerSender"
             android:textSize="16sp"/>
 
     </LinearLayout>
