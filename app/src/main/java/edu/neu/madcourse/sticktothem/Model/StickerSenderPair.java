@@ -9,6 +9,9 @@ public class StickerSenderPair {
         this.sender = sender;
     }
 
+    public StickerSenderPair() {
+    }
+
     public String getSticker() {
         return this.sticker;
     }
