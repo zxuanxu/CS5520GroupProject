@@ -187,14 +187,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        readReceiveStickerHistory(firebaseUser.getUid());
+        readReceiveStickerHistory();
     }
 
-    private void readReceiveStickerHistory(String userid) {
+    private void readReceiveStickerHistory() {
 
         FirebaseDatabase.getInstance()
                 .getReference("Users")
-                .child(user.getUsername())
+                .child(usernameStr)
                 .child("chats")
                 .addValueEventListener(new ValueEventListener() {
             @Override
