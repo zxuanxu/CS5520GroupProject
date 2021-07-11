@@ -7,14 +7,12 @@ public class User {
     private String username;
     private String token;
     public int numOfStickersSent;
-    public HashMap<String, StickerSenderPair> stickerReceiverPairs;
 
     public User(String id, String username, String token) {
         this.id = id;
         this.username = username;
         this.token = token;
         numOfStickersSent = 0;
-        stickerReceiverPairs = new HashMap<>();
     }
 
     public User() {

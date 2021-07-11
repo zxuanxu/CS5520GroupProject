@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                         // get real-time number of sticker sent
                         // getUserNumOfStickersSent(user.getUsername());
                         FirebaseDatabase.getInstance()
-                                .getReference("Users")
+                                .getReference(  "Users")
                                 .child(user.getUsername())
                                 .child("numOfStickersSent").addValueEventListener(new ValueEventListener() {
                             @Override
