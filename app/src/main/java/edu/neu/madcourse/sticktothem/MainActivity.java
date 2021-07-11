@@ -1,19 +1,13 @@
 package edu.neu.madcourse.sticktothem;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -90,42 +84,44 @@ public class MainActivity extends AppCompatActivity {
                         username.setText(user.getUsername());
 
                         // get real-time number of sticker sent
-                        FirebaseDatabase.getInstance()
-                                .getReference("Users")
-                                .child(user.getUsername())
-                                .child("numOfStickersSent").addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                numOfStickerSent = snapshot.getValue(Integer.class);
-                                tvNumOfStickerSent.setText("You have sent out: " + numOfStickerSent + " stickers");
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
+                        getUserNumOfStickersSent(user.getUsername());
+//                        FirebaseDatabase.getInstance()
+//                                .getReference("Users")
+//                                .child(user.getUsername())
+//                                .child("numOfStickersSent").addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                numOfStickerSent = snapshot.getValue(Integer.class);
+//                                tvNumOfStickerSent.setText("You have sent out: " + numOfStickerSent + " stickers");
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            }
+//                        });
 
                         // get current user's token
-                        FirebaseMessaging.getInstance().getToken()
-                                .addOnCompleteListener(new OnCompleteListener<String>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<String> task) {
-                                        if (!task.isSuccessful()) {
-                                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                                            return;
-                                        }
-                                        String token = task.getResult();
-
-                                        FirebaseDatabase
-                                                .getInstance()
-                                                .getReference()
-                                                .child("Users")
-                                                .child(user.getUsername())
-                                                .child("token")
-                                                .setValue(token);
-                                    }
-                                });
+//                        FirebaseMessaging.getInstance().getToken()
+//                                .addOnCompleteListener(new OnCompleteListener<String>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<String> task) {
+//                                        if (!task.isSuccessful()) {
+//                                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+//                                            return;
+//                                        }
+//                                        String token = task.getResult();
+//
+//                                        FirebaseDatabase
+//                                                .getInstance()
+//                                                .getReference()
+//                                                .child("Users")
+//                                                .child(user.getUsername())
+//                                                .child("token")
+//                                                .setValue(token);
+//                                    }
+//                                });
+                        getUserToken(user.getUsername());
 
                     }
                 } catch(Exception e) {
@@ -202,11 +198,48 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    private void getUserToken(String username) {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        String token = task.getResult();
+
+                        FirebaseDatabase
+                                .getInstance()
+                                .getReference()
+                                .child("Users")
+                                .child(username)
+                                .child("token")
+                                .setValue(token);
+                    }
+                });
+    }
+
+    private void getUserNumOfStickersSent(String username) {
+        FirebaseDatabase.getInstance()
+                .getReference("Users")
+                .child(username)
+                .child("numOfStickersSent").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                numOfStickerSent = snapshot.getValue(Integer.class);
+                tvNumOfStickerSent.setText("You have sent out: " + numOfStickerSent + " stickers");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-
-
     }
 
 }
