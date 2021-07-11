@@ -45,6 +45,8 @@ public class StickerDialog extends AppCompatDialogFragment {
     DatabaseReference databaseReference;
     User user;
 
+
+
     TextView username;
     EditText receiver;
     private String message;
