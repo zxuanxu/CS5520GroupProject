@@ -143,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showSendStickerDialog();
-
             }
         });
 
@@ -154,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
                 showStickerHistory();
             }
         });
-
     }
 
     private void showSendStickerDialog() {
@@ -183,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 
@@ -191,12 +188,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readReceiveStickerHistory() {
-
         FirebaseDatabase.getInstance()
                 .getReference("Users")
                 .child(usernameStr)
                 .child("chats")
                 .addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 stickerSenderPairArrayList.clear();
