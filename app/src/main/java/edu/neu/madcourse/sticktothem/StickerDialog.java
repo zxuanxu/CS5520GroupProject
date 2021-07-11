@@ -45,10 +45,12 @@ public class StickerDialog extends AppCompatDialogFragment {
     DatabaseReference databaseReference;
     User user;
 
-
+    String sender;
+    String receiver;
+    String receiverToken;
 
     TextView username;
-    EditText receiver;
+    EditText etReceiver;
     private String message;
 
     Context context;
@@ -97,6 +99,10 @@ public class StickerDialog extends AppCompatDialogFragment {
             }
         });
 
+        // set sender
+        sender = user.getUsername();
+
+
         // set onClickListener for four sticker buttons
         Button btnSmile = view.findViewById(R.id.btnSmile);
         Button btnCry = view.findViewById(R.id.btnCry);
@@ -122,13 +128,13 @@ public class StickerDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(View v) {
                 // find receiver's name
-                receiver = view.findViewById(R.id.receiver);
-                String txtReceiver = receiver.getText().toString();
+                etReceiver = view.findViewById(R.id.receiver);
+                receiver = etReceiver.getText().toString();
                 firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 databaseReference = FirebaseDatabase.getInstance().getReference("Users");
 
 
-                if (TextUtils.isEmpty(txtReceiver)) {
+                if (TextUtils.isEmpty(receiver)) {
                     // if link name is empty, pop up a snack bar
                     Toast.makeText(context, "Username cannot be empty.", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(message)) {
@@ -137,7 +143,7 @@ public class StickerDialog extends AppCompatDialogFragment {
                 } else {
                     // check if receiver exists
                     databaseReference
-                            .child(txtReceiver)
+                            .child(receiver)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -154,10 +160,8 @@ public class StickerDialog extends AppCompatDialogFragment {
                                         user.numOfStickersSent++;
                                         databaseReference.child(user.getUsername())
                                                 .child("numOfStickersSent").setValue(user.numOfStickersSent);
-                                        sendSticker(txtReceiver, stickerSenderPair);
-//                                        getToken(message, txtReceiver);
-
-//                                        sendStickerToDevice(txtReceiver, message + " from " + user.getUsername());
+                                        receiverToken = snapshot.child("token").getValue(String.class);
+                                        sendSticker(receiver, stickerSenderPair);
 
                                         // close dialog
                                         dismiss();
@@ -212,8 +216,7 @@ public class StickerDialog extends AppCompatDialogFragment {
         hashMap.put("stickerSenderPair", stickerSenderPair);
 
         databaseReference.child("chats").push().setValue(hashMap);
-        sendStickerToDevice(receiver,
-                stickerSenderPair.getSticker() + " from " + stickerSenderPair.getSender());
+        sendStickerToDevice(sender, receiverToken, message);
     }
 
 //    private void getToken(String message, String userId) {
@@ -278,7 +281,7 @@ public class StickerDialog extends AppCompatDialogFragment {
 //        requestQueue.add(request);
 //    }
 
-    private void sendStickerToDevice(final String deviceToSendTo, final String stickerAndUserFrom) {
+    private void sendStickerToDevice(String sender, String receiverToken, final String sticker) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -287,15 +290,15 @@ public class StickerDialog extends AppCompatDialogFragment {
                 JSONObject jData = new JSONObject();
 
                 try {
-                    jNotification.put("title", "New Sticker from " + user.getUsername());
-                    jNotification.put("body", stickerAndUserFrom);
+                    jNotification.put("title", "New Sticker from " + sender);
+                    jNotification.put("body", sticker);
                     jNotification.put("sound", "default");
                     jNotification.put("badge", "1");
 
-                    jData.put("title", "New Sticker from " + user.getUsername());
-                    jData.put("content", stickerAndUserFrom);
+                    jData.put("title", "New Sticker from " + sender);
+                    jData.put("content", sticker);
 
-                    jPayload.put("to", deviceToSendTo);
+                    jPayload.put("to", receiverToken);
                     jPayload.put("priority", "high");
                     jPayload.put("notification", jNotification);
                     jPayload.put("data", jData);
