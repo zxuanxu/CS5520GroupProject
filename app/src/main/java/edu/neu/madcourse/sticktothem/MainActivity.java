@@ -37,12 +37,11 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
     User user;
+    String usernameStr;
 
     // set up for two dialogs
     Button btnSendDialog, btnHistory;
     TextView username;
-    EditText receiver;
-    String message;
     int numOfStickerSent;
     TextView tvNumOfStickerSent;
 
@@ -81,10 +80,10 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     for (DataSnapshot child : snapshot.getChildren()) {
                         user = child.getValue(User.class);
-                        username.setText(user.getUsername());
+                        usernameStr = user.getUsername();
+                        username.setText(usernameStr);
 
                         // get real-time number of sticker sent
-                        // getUserNumOfStickersSent(user.getUsername());
                         FirebaseDatabase.getInstance()
                                 .getReference(  "Users")
                                 .child(user.getUsername())
@@ -121,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
                                                 .setValue(token);
                                     }
                                 });
-                        //getUserToken(user.getUsername());
 
                     }
                 } catch(Exception e) {
@@ -159,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @SuppressLint("ResourceAsColor")
     private void showSendStickerDialog() {
         StickerDialog stickerDialog = new StickerDialog(
                 this,
@@ -173,7 +170,22 @@ public class MainActivity extends AppCompatActivity {
     private void showStickerHistory() {
         // find current user and database reference
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").getParent();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(usernameStr);
+
+        // if there is no chat message
+        databaseReference.orderByKey().equalTo("chats").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    Toast.makeText(MainActivity.this, "You have not received any sticker yet.", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         readReceiveStickerHistory(firebaseUser.getUid());
     }
@@ -198,46 +210,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-    }
-
-    private void getUserToken(String username) {
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-                        String token = task.getResult();
-
-                        FirebaseDatabase
-                                .getInstance()
-                                .getReference()
-                                .child("Users")
-                                .child(username)
-                                .child("token")
-                                .setValue(token);
-                    }
-                });
-    }
-
-    private void getUserNumOfStickersSent(String username) {
-        FirebaseDatabase.getInstance()
-                .getReference("Users")
-                .child(username)
-                .child("numOfStickersSent").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                numOfStickerSent = snapshot.getValue(Integer.class);
-                tvNumOfStickerSent.setText("You have sent out: " + numOfStickerSent + " stickers");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
