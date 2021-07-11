@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="15dp"
     android:background="@drawable/shape_background"
     android:gravity="center"
@@ -48,47 +49,54 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnSmile"
-            android:layout_width="wrap_content"
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleBtnGroup"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
-            android:text="@string/smile" />
+            app:singleSelection="true">
 
-        <Button
-            android:id="@+id/btnCry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
-            android:text="@string/cry" />
+            <Button
+                android:id="@+id/btnSmile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_weight="1"
+                style="?attr/materialButtonOutlinedStyle"
+                android:backgroundTint="@color/white"
+                android:text="@string/smile" />
 
-        <Button
-            android:id="@+id/btnSad"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
-            android:text="@string/sad" />
+            <Button
+                android:id="@+id/btnCry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_weight="1"
+                style="?attr/materialButtonOutlinedStyle"
+                android:backgroundTint="@color/white"
+                android:text="@string/cry" />
 
-        <Button
-            android:id="@+id/btnLaugh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
-            android:text="@string/laugh" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/btnSad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_weight="1"
+                style="?attr/materialButtonOutlinedStyle"
+                android:backgroundTint="@color/white"
+                android:text="@string/sad" />
+
+            <Button
+                android:id="@+id/btnLaugh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_weight="1"
+                style="?attr/materialButtonOutlinedStyle"
+                android:backgroundTint="@color/white"
+                android:text="@string/laugh" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
 
     <LinearLayout
         android:layout_width="match_parent"

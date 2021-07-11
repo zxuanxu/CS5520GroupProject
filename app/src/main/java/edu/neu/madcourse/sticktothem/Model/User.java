@@ -1,18 +1,18 @@
 package edu.neu.madcourse.sticktothem.Model;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class User {
     private String id;
     private String username;
+    private String token;
     public int numOfStickersSent;
-    public ArrayList<StickerReceiverPair> stickerReceiverPairArrayList;
 
-    public User(String id, String username) {
+    public User(String id, String username, String token) {
         this.id = id;
         this.username = username;
+        this.token = token;
         numOfStickersSent = 0;
-        stickerReceiverPairArrayList = new ArrayList<>();
     }
 
     public User() {
@@ -31,4 +31,7 @@ public class User {
         return numOfStickersSent;
     }
 
+    public String getToken() {
+        return token;
+    }
 }

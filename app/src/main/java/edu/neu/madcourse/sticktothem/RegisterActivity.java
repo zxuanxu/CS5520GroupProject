@@ -66,11 +66,12 @@ public class RegisterActivity extends AppCompatActivity {
                             assert firebaseUser != null;
                             String userid = firebaseUser.getUid();
 
-                            databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
+                            databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(username);
 
-                            HashMap<String, String> hashMap = new HashMap<>();
+                            HashMap<String, Object> hashMap = new HashMap<>();
                             hashMap.put("id", userid);
                             hashMap.put("username", username);
+                            hashMap.put("numOfStickersSent", 0);
 
                             databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
 
