@@ -47,10 +47,11 @@ public class MyFirebaseService extends FirebaseMessagingService {
     }
 
     private void updateToken(String newToken) {
+        // firebaseUser no use
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-
+        //
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("token", newToken);
         databaseReference.updateChildren(hashMap);
