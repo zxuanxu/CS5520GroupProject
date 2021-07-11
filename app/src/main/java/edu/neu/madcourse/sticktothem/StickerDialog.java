@@ -49,7 +49,6 @@ public class StickerDialog extends AppCompatDialogFragment {
     String receiver;
     String receiverToken;
 
-    TextView username;
     EditText etReceiver;
     private String message;
 
@@ -102,7 +101,6 @@ public class StickerDialog extends AppCompatDialogFragment {
         // set sender
         sender = user.getUsername();
 
-
         // set onClickListener for four sticker buttons
         Button btnSmile = view.findViewById(R.id.btnSmile);
         Button btnCry = view.findViewById(R.id.btnCry);
@@ -152,10 +150,6 @@ public class StickerDialog extends AppCompatDialogFragment {
                                         StickerSenderPair stickerSenderPair = new StickerSenderPair(
                                                 message, user.getUsername()
                                         );
-                                        // add newly created StickerSenderPair to list
-//                                        int listCount = adapter.getItemCount();
-//                                        stickerReceiverPairArrayList.add(listCount, stickerReceiverPair);
-//                                        adapter.notifyItemInserted(listCount);
 
                                         user.numOfStickersSent++;
                                         databaseReference.child(user.getUsername())
@@ -218,68 +212,6 @@ public class StickerDialog extends AppCompatDialogFragment {
         databaseReference.child("chats").push().setValue(hashMap);
         sendStickerToDevice(sender, receiverToken, message);
     }
-
-//    private void getToken(String message, String userId) {
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
-//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                String token = snapshot.child("token").getValue().toString();
-//                String name = snapshot.child("username").getValue().toString();
-//
-//                // FCM use json format to send data message
-//                JSONObject to = new JSONObject();
-//                JSONObject data = new JSONObject();
-//                try {
-//                    data.put("title", name);
-//                    data.put("message", message);
-//                    data.put("userId", userId);
-//
-//                    to.put("to", token);
-//                    to.put("data", data);
-//
-//                    sendNotification(to);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
-//
-//    private void sendNotification(JSONObject to) {
-//        // url to send POST request
-//        String notificationUrl = "http://fcm.googleapis.com/fcm/send";
-//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, notificationUrl, to, response -> {
-//            Log.d("notification", "sendNotification: " + response);
-//        }, error -> {
-//            Log.d("notification", "sendNotification: " + error);
-//        }) {
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                // add project server key and application type
-//                HashMap<String, String> hashMap = new HashMap<>();
-//                hashMap.put("Authorization", "key=" + MainActivity.SERVER_KEY);
-//                hashMap.put("Content-Type", "application/json");
-//                return hashMap;
-//            }
-//
-//            @Override
-//            public String getBodyContentType() {
-//                return "application/json";
-//            }
-//        };
-//
-//        RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
-//        request.setRetryPolicy(new DefaultRetryPolicy(30000,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//        requestQueue.add(request);
-//    }
 
     private void sendStickerToDevice(String sender, String receiverToken, final String sticker) {
         new Thread(new Runnable() {

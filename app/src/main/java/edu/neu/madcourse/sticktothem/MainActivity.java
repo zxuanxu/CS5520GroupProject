@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
         // get current user and database reference
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
         FirebaseDatabase.getInstance()
@@ -86,9 +85,22 @@ public class MainActivity extends AppCompatActivity {
                         user = child.getValue(User.class);
                         username.setText(user.getUsername());
 
-                        // get number of sticker sent
-                        numOfStickerSent = user.getNumOfStickersSent();
-                        tvNumOfStickerSent.setText(tvNumOfStickerSent.getText().toString() + numOfStickerSent + " stickers");
+                        // get real-time number of sticker sent
+                        FirebaseDatabase.getInstance()
+                                .getReference("Users")
+                                .child(user.getUsername())
+                                .child("numOfStickersSent").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                numOfStickerSent = snapshot.getValue(Integer.class);
+                                tvNumOfStickerSent.setText("You have sent out: " + numOfStickerSent + " stickers");
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
 
                         // get current user's token
                         FirebaseMessaging.getInstance().getToken()
@@ -124,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
+        // set up onClickListener for two buttons in MainActivity
         btnSendDialog = findViewById(R.id.btnSendDialog);
         btnHistory = findViewById(R.id.btnHistory);
 
@@ -158,56 +170,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showStickerHistory() {
-        // create an AlertDialog builder
-//        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-//
-//        LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
-//        final View inputView = layoutInflater.inflate(R.layout.sticker_history_layout, null);
-//
-//        alertDialogBuilder.setView(inputView);
-//
-//        final AlertDialog alertDialog = alertDialogBuilder.create();
-//        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-//
-//        alertDialog.show();
-
         // find current user and database reference
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").getParent();
 
         readReceiveStickerHistory(firebaseUser.getUid());
-
-//        Button btnClose = inputView.findViewById(R.id.btnClose);
-//        btnClose.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                alertDialog.cancel();
-//            }
-//        });
-
     }
-
-
-    private View.OnClickListener stickerButtonClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.btnSmile:
-                    message = "🙂";
-                    break;
-                case R.id.btnCry:
-                    message = "😭";
-                    break;
-                case R.id.btnSad:
-                    message = "🙁";
-                    break;
-                case R.id.btnLaugh:
-                    message = "😀";
-                    break;
-            }
-        }
-    };
 
     private void readReceiveStickerHistory(String userid) {
 

@@ -11,18 +11,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StickToThem">
 
-        <activity android:name=".StartActivity">
+        <activity android:name=".StartActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation|screenSize"/>
         <activity android:name=".LoginActivity"
             android:parentActivityName=".StartActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/login_name"/>
         <activity android:name=".RegisterActivity"
+            android:configChanges="orientation|screenSize"
             android:parentActivityName=".StartActivity"
             android:label="@string/register_name"/>
 
