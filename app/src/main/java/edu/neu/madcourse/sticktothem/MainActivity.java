@@ -299,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
                 stickerSenderPairArrayList.clear();
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                     StickerSenderPair stickerSenderPair = dataSnapshot.getValue(StickerSenderPair.class);
-                    stickerSenderPairArrayList.add(stickerSenderPair);
+                    stickerSenderPairArrayList.add(0, stickerSenderPair);
                 }
                 // update adapter
                 adapter.notifyDataSetChanged();
