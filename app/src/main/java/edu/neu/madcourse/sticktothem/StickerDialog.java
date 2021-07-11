@@ -89,18 +89,18 @@ public class StickerDialog extends AppCompatDialogFragment {
                 .orderByChild("id")
                 .equalTo(firebaseUser.getUid())
                 .addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                    user = dataSnapshot.getValue(User.class);
-                }
-            }
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            user = dataSnapshot.getValue(User.class);
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                    }
+                });
 
         // set sender
         sender = user.getUsername();
@@ -186,7 +186,6 @@ public class StickerDialog extends AppCompatDialogFragment {
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
-
                                 }
                             });
                 }
@@ -226,7 +225,7 @@ public class StickerDialog extends AppCompatDialogFragment {
     private void sendSticker(String receiver, StickerSenderPair stickerSenderPair) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(receiver);
 
-        HashMap<String, Object> hashMap  = new HashMap<>();
+        HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("sender", stickerSenderPair.getSender());
         hashMap.put("sticker", stickerSenderPair.getSticker());
 
