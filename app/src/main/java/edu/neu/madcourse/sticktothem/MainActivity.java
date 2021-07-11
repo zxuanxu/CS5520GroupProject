@@ -84,44 +84,44 @@ public class MainActivity extends AppCompatActivity {
                         username.setText(user.getUsername());
 
                         // get real-time number of sticker sent
-                        getUserNumOfStickersSent(user.getUsername());
-//                        FirebaseDatabase.getInstance()
-//                                .getReference("Users")
-//                                .child(user.getUsername())
-//                                .child("numOfStickersSent").addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                numOfStickerSent = snapshot.getValue(Integer.class);
-//                                tvNumOfStickerSent.setText("You have sent out: " + numOfStickerSent + " stickers");
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError error) {
-//
-//                            }
-//                        });
+                        // getUserNumOfStickersSent(user.getUsername());
+                        FirebaseDatabase.getInstance()
+                                .getReference("Users")
+                                .child(user.getUsername())
+                                .child("numOfStickersSent").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                numOfStickerSent = snapshot.getValue(Integer.class);
+                                tvNumOfStickerSent.setText("You have sent out: " + numOfStickerSent + " stickers");
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
 
                         // get current user's token
-//                        FirebaseMessaging.getInstance().getToken()
-//                                .addOnCompleteListener(new OnCompleteListener<String>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<String> task) {
-//                                        if (!task.isSuccessful()) {
-//                                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-//                                            return;
-//                                        }
-//                                        String token = task.getResult();
-//
-//                                        FirebaseDatabase
-//                                                .getInstance()
-//                                                .getReference()
-//                                                .child("Users")
-//                                                .child(user.getUsername())
-//                                                .child("token")
-//                                                .setValue(token);
-//                                    }
-//                                });
-                        getUserToken(user.getUsername());
+                        FirebaseMessaging.getInstance().getToken()
+                                .addOnCompleteListener(new OnCompleteListener<String>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<String> task) {
+                                        if (!task.isSuccessful()) {
+                                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                                            return;
+                                        }
+                                        String token = task.getResult();
+
+                                        FirebaseDatabase
+                                                .getInstance()
+                                                .getReference()
+                                                .child("Users")
+                                                .child(user.getUsername())
+                                                .child("token")
+                                                .setValue(token);
+                                    }
+                                });
+                        //getUserToken(user.getUsername());
 
                     }
                 } catch(Exception e) {
