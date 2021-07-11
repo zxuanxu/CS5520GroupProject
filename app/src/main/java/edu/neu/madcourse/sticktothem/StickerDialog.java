@@ -12,8 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
+
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -103,16 +105,29 @@ public class StickerDialog extends AppCompatDialogFragment {
         // set sender
         sender = user.getUsername();
 
-        // set onClickListener for four sticker buttons
-        Button btnSmile = view.findViewById(R.id.btnSmile);
-        Button btnCry = view.findViewById(R.id.btnCry);
-        Button btnSad = view.findViewById(R.id.btnSad);
-        Button btnLaugh = view.findViewById(R.id.btnLaugh);
-
-        btnSmile.setOnClickListener(stickerButtonClickListener);
-        btnCry.setOnClickListener(stickerButtonClickListener);
-        btnLaugh.setOnClickListener(stickerButtonClickListener);
-        btnSad.setOnClickListener(stickerButtonClickListener);
+        // set onClickListener for ToggleButtonGroup
+        MaterialButtonToggleGroup toggleButtonGroup = view.findViewById(R.id.toggleBtnGroup);
+        toggleButtonGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
+            @Override
+            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+                if (isChecked) {
+                    switch (checkedId) {
+                        case R.id.btnSmile:
+                            message = "🙂";
+                            break;
+                        case R.id.btnCry:
+                            message = "😭";
+                            break;
+                        case R.id.btnSad:
+                            message = "🙁";
+                            break;
+                        case R.id.btnLaugh:
+                            message = "😀";
+                            break;
+                    }
+                }
+            }
+        });
 
         Button btnClose = view.findViewById(R.id.btnClose);
         btnClose.setOnClickListener(new View.OnClickListener() {
