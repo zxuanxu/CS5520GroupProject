@@ -1,6 +1,8 @@
 package edu.neu.madcourse.sticktothem;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -176,8 +178,13 @@ public class StickerDialog extends AppCompatDialogFragment {
             }
         });
 
-
         return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
     private View.OnClickListener stickerButtonClickListener = new View.OnClickListener() {
